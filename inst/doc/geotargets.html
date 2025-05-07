@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Using terra with geotargets</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Using <code>terra</code> with
+<code>geotargets</code></h1>
+
+
+
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(targets)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(geotargets)</span></code></pre></div>
+<p>The <code>geotargets</code> package extends <code>targets</code> to
+work with geospatial data formats, such as rasters and vectors (e.g.,
+shape files). In particular, <code>geotargets</code> aims to support use
+of the <code>terra</code> package, which tend to cause problems if used
+in targets created with <code>tar_target()</code> . If you are new to
+<code>targets</code>, you should start by looking at the <a href="https://books.ropensci.org/targets/">targets manual</a> to get a
+handle on the basics.</p>
+<p>The design of <code>geotargets</code> is to specify target factories
+like so: <code>tar_&lt;pkg&gt;_&lt;type&gt;</code>.</p>
+<p>In this vignette we will demonstrate the use of the
+<code>terra</code> R package, and we will demonstrate how to build
+raster (<code>rast</code>), vector (<code>vect</code>), raster
+collection (<code>sprc</code>), and raster dataset (<code>sds</code>)
+targets with:</p>
+<ul>
+<li><code>tar_terra_rast()</code></li>
+<li><code>tar_terra_vect()</code></li>
+<li><code>tar_terra_sprc()</code></li>
+<li><code>tar_terra_sds()</code></li>
+</ul>
+<div id="how-to-run-targets-examples-from-vignettes" class="section level1">
+<h1>How to run targets examples from vignettes</h1>
+<p>The example code in this vignette is designed for you to be able to
+just copy and paste into the R console. However, this is not a typical
+way to run a targets workflow.</p>
+<p>The examples make use of <a href="https://docs.ropensci.org/targets/reference/tar_script.html"><code>targets::tar_script()</code></a>,
+which creates or overwrites a <code>_targets.R</code> file (See for
+example, the <a href="https://github.com/njtierney/demo-geotargets/blob/main/_targets.R"><code>_targets.R</code>
+file in the demo-geotargets repo</a>). In these examples, everything
+inside of <code>tar_script({})</code> is what would go inside a
+<code>_targets.R</code> file defining a workflow. When running the
+<code>tar_script</code> code, it will ask you each time if you want to
+overwrite the <code>_targets.R</code> file. This means if you are
+exploring these examples and copying the entire examples, it is
+worthwhile doing this in a separate directory/project/repository to
+avoid overwriting your own <code>_targets.R</code> file.</p>
+<p>So, when building your own targets workflow it is <strong>not
+recommended</strong> to use <code>tar_script()</code>, but instead to
+create <code>_targets.R</code> and edit <code>_targets.R</code>
+directly.</p>
+<div id="tar_terra_rast-targets-with-terra-rasters" class="section level2">
+<h2><code>tar_terra_rast()</code>: targets with <code>terra</code>
+rasters</h2>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>targets<span class="sc">::</span><span class="fu">tar_script</span>({</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>  <span class="fu">library</span>(targets)</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>  <span class="fu">library</span>(geotargets)</span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>  <span class="fu">tar_option_set</span>(<span class="at">packages =</span> <span class="st">&quot;terra&quot;</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>  <span class="fu">geotargets_option_set</span>(<span class="at">gdal_raster_driver =</span> <span class="st">&quot;COG&quot;</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>  <span class="fu">list</span>(</span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a>    <span class="fu">tar_target</span>(</span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a>      tif_file,</span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a>      <span class="fu">system.file</span>(<span class="st">&quot;ex/elev.tif&quot;</span>, <span class="at">package =</span> <span class="st">&quot;terra&quot;</span>),</span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a>      <span class="at">format =</span> <span class="st">&quot;file&quot;</span></span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a>    ),</span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a>    <span class="fu">tar_terra_rast</span>(</span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a>      r,</span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a>      {</span>
+<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a>        rast <span class="ot">&lt;-</span> <span class="fu">rast</span>(tif_file)</span>
+<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a>        <span class="fu">units</span>(rast) <span class="ot">&lt;-</span> <span class="st">&quot;m&quot;</span></span>
+<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a>        rast</span>
+<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a>      }</span>
+<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a>    ),</span>
+<span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a>    <span class="fu">tar_terra_rast</span>(</span>
+<span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a>      r_agg,</span>
+<span id="cb2-22"><a href="#cb2-22" tabindex="-1"></a>      <span class="fu">aggregate</span>(r, <span class="dv">2</span>)</span>
+<span id="cb2-23"><a href="#cb2-23" tabindex="-1"></a>    )</span>
+<span id="cb2-24"><a href="#cb2-24" tabindex="-1"></a>  )</span>
+<span id="cb2-25"><a href="#cb2-25" tabindex="-1"></a>})</span></code></pre></div>
+<p>Above is a basic example showing the use of
+<code>tar_terra_rast()</code> in a targets pipeline. The command for
+<code>tar_terra_rast()</code> can be any function that returns a
+<code>SpatRaster</code> object.</p>
+<p>In this example, we’ve set the output to a cloud optimized geotiff
+(“COG”), but any GDAL driver that works with
+<code>terra::writeRaster()</code> should also work here. By default, we
+use “GTiff”. You can also set this option on a target-by-target basis
+with the <code>filetype</code> argument to
+<code>tar_terra_rast()</code>.</p>
+<p>Running the pipeline:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">tar_make</span>()</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="co">#&gt; + tif_file dispatched</span></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="co">#&gt; terra 1.8.42</span></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co">#&gt; ✔ tif_file completed [5ms, 7.99 kB]</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="co">#&gt; + r dispatched</span></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="co">#&gt; ✔ r completed [22ms, 10.47 kB]</span></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co">#&gt; + r_agg dispatched</span></span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="co">#&gt; ✔ r_agg completed [2ms, 6.30 kB]</span></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="co">#&gt; ✔ ended pipeline [140ms, 3 completed, 0 skipped]</span></span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="fu">tar_read</span>(r)</span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="co">#&gt; class       : SpatRaster </span></span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="co">#&gt; dimensions  : 90, 95, 1  (nrow, ncol, nlyr)</span></span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a><span class="co">#&gt; resolution  : 0.008333333, 0.008333333  (x, y)</span></span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a><span class="co">#&gt; extent      : 5.741667, 6.533333, 49.44167, 50.19167  (xmin, xmax, ymin, ymax)</span></span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a><span class="co">#&gt; coord. ref. : lon/lat WGS 84 (EPSG:4326) </span></span>
+<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a><span class="co">#&gt; source      : r </span></span>
+<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a><span class="co">#&gt; name        : elevation </span></span>
+<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a><span class="co">#&gt; min value   :       141 </span></span>
+<span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a><span class="co">#&gt; max value   :       547 </span></span>
+<span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a><span class="co">#&gt; unit        :         m</span></span>
+<span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a><span class="fu">tar_read</span>(r_agg)</span>
+<span id="cb3-22"><a href="#cb3-22" tabindex="-1"></a><span class="co">#&gt; class       : SpatRaster </span></span>
+<span id="cb3-23"><a href="#cb3-23" tabindex="-1"></a><span class="co">#&gt; dimensions  : 45, 48, 1  (nrow, ncol, nlyr)</span></span>
+<span id="cb3-24"><a href="#cb3-24" tabindex="-1"></a><span class="co">#&gt; resolution  : 0.01666667, 0.01666667  (x, y)</span></span>
+<span id="cb3-25"><a href="#cb3-25" tabindex="-1"></a><span class="co">#&gt; extent      : 5.741667, 6.541667, 49.44167, 50.19167  (xmin, xmax, ymin, ymax)</span></span>
+<span id="cb3-26"><a href="#cb3-26" tabindex="-1"></a><span class="co">#&gt; coord. ref. : lon/lat WGS 84 (EPSG:4326) </span></span>
+<span id="cb3-27"><a href="#cb3-27" tabindex="-1"></a><span class="co">#&gt; source      : r_agg </span></span>
+<span id="cb3-28"><a href="#cb3-28" tabindex="-1"></a><span class="co">#&gt; name        : elevation </span></span>
+<span id="cb3-29"><a href="#cb3-29" tabindex="-1"></a><span class="co">#&gt; min value   :    166.75 </span></span>
+<span id="cb3-30"><a href="#cb3-30" tabindex="-1"></a><span class="co">#&gt; max value   :    529.50</span></span></code></pre></div>
+<div id="raster-metadata" class="section level3">
+<h3>Raster metadata</h3>
+<p>You may have noticed the units for the <code>r</code> target above
+have gone missing. This is due to limitations of <code>terra</code> and
+<code>targets</code>—<code>terra</code> saves some metadata in “sidecar”
+aux.json files and <code>targets</code> enforces a strict one file per
+target rule.</p>
+<p>You can get around this by setting
+<code>preserve_metadata = &quot;zip&quot;</code> in <code>tar_terra_rast()</code>
+to save the output files, including the metadata, as a minimally
+compressed zip archive.</p>
+<p>You can also set this for all raster targets with
+<code>geotargets_option_set(terra_preserve_metadata = &quot;zip&quot;)</code>.</p>
+<p>Note: there are likely performance costs associated with this
+option.<br />
+As an alternative, you can encode information in the layer names by
+setting <code>names(r) &lt;-</code> which are retained even with the
+default <code>preserve_metadata = &quot;drop&quot;</code>.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>targets<span class="sc">::</span><span class="fu">tar_script</span>({</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>  <span class="co"># contents of _targets.R:</span></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>  <span class="fu">library</span>(targets)</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>  <span class="fu">library</span>(geotargets)</span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>  <span class="fu">tar_option_set</span>(<span class="at">packages =</span> <span class="st">&quot;terra&quot;</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>  <span class="fu">geotargets_option_set</span>(<span class="at">gdal_raster_driver =</span> <span class="st">&quot;COG&quot;</span>)</span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a>  <span class="fu">list</span>(</span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a>    <span class="fu">tar_target</span>(</span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a>      tif_file,</span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a>      <span class="fu">system.file</span>(<span class="st">&quot;ex/elev.tif&quot;</span>, <span class="at">package =</span> <span class="st">&quot;terra&quot;</span>),</span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a>      <span class="at">format =</span> <span class="st">&quot;file&quot;</span></span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a>    ),</span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a>    <span class="fu">tar_terra_rast</span>(</span>
+<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a>      r,</span>
+<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a>      {</span>
+<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a>        rast <span class="ot">&lt;-</span> <span class="fu">rast</span>(tif_file)</span>
+<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a>        <span class="fu">units</span>(rast) <span class="ot">&lt;-</span> <span class="st">&quot;m&quot;</span></span>
+<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a>        rast</span>
+<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a>      },</span>
+<span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a>      <span class="at">preserve_metadata =</span> <span class="st">&quot;zip&quot;</span></span>
+<span id="cb4-21"><a href="#cb4-21" tabindex="-1"></a>    )</span>
+<span id="cb4-22"><a href="#cb4-22" tabindex="-1"></a>  )</span>
+<span id="cb4-23"><a href="#cb4-23" tabindex="-1"></a>})</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">tar_make</span>()</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="co">#&gt; + r dispatched</span></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="co">#&gt; terra 1.8.42</span></span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="co">#&gt; ✔ r completed [8ms, 10.26 kB]</span></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a><span class="co">#&gt; ✔ ended pipeline [114ms, 1 completed, 1 skipped]</span></span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>terra<span class="sc">::</span><span class="fu">units</span>(<span class="fu">tar_read</span>(r))</span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a><span class="co">#&gt; [1] &quot;m&quot;</span></span></code></pre></div>
+</div>
+</div>
+<div id="tar_terra_vect-targets-with-terra-vectors" class="section level2">
+<h2><code>tar_terra_vect()</code>: targets with <code>terra</code>
+vectors</h2>
+<p>For <code>terra</code> <code>SpatVector</code> objects, use
+<code>tar_terra_vect()</code> in the pipeline. You can set vector
+specific options with <code>geotargets_option_set()</code> or with the
+<code>filetype</code> and <code>gdal</code> arguments to individual
+<code>tar_terra_vect()</code> calls.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>targets<span class="sc">::</span><span class="fu">tar_script</span>({</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>  <span class="co"># contents of _targets.R:</span></span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>  <span class="fu">library</span>(targets)</span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>  <span class="fu">library</span>(geotargets)</span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>  <span class="fu">geotargets_option_set</span>(<span class="at">gdal_vector_driver =</span> <span class="st">&quot;GeoJSON&quot;</span>)</span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>  <span class="fu">list</span>(</span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>    <span class="fu">tar_target</span>(</span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a>      vect_file,</span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a>      <span class="fu">system.file</span>(<span class="st">&quot;ex&quot;</span>, <span class="st">&quot;lux.shp&quot;</span>, <span class="at">package =</span> <span class="st">&quot;terra&quot;</span>),</span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a>      <span class="at">format =</span> <span class="st">&quot;file&quot;</span></span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a>    ),</span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a>    <span class="fu">tar_terra_vect</span>(</span>
+<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a>      v,</span>
+<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a>      terra<span class="sc">::</span><span class="fu">vect</span>(vect_file)</span>
+<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a>    ),</span>
+<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a>    <span class="fu">tar_terra_vect</span>(</span>
+<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a>      v_proj,</span>
+<span id="cb6-18"><a href="#cb6-18" tabindex="-1"></a>      terra<span class="sc">::</span><span class="fu">project</span>(v, <span class="st">&quot;EPSG:2196&quot;</span>)</span>
+<span id="cb6-19"><a href="#cb6-19" tabindex="-1"></a>    )</span>
+<span id="cb6-20"><a href="#cb6-20" tabindex="-1"></a>  )</span>
+<span id="cb6-21"><a href="#cb6-21" tabindex="-1"></a>})</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">tar_make</span>()</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="co">#&gt; + vect_file dispatched</span></span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="co">#&gt; ✔ vect_file completed [0ms, 64.69 kB]</span></span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a><span class="co">#&gt; + v dispatched</span></span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a><span class="co">#&gt; ✔ v completed [17ms, 117.63 kB]</span></span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a><span class="co">#&gt; + v_proj dispatched</span></span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a><span class="co">#&gt; ✔ v_proj completed [24ms, 213.55 kB]</span></span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a><span class="co">#&gt; ✔ ended pipeline [156ms, 3 completed, 0 skipped]</span></span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a><span class="fu">tar_read</span>(v)</span>
+<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a><span class="co">#&gt;  class       : SpatVector </span></span>
+<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a><span class="co">#&gt;  geometry    : polygons </span></span>
+<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a><span class="co">#&gt;  dimensions  : 12, 6  (geometries, attributes)</span></span>
+<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a><span class="co">#&gt;  extent      : 5.74414, 6.528252, 49.44781, 50.18162  (xmin, xmax, ymin, ymax)</span></span>
+<span id="cb7-14"><a href="#cb7-14" tabindex="-1"></a><span class="co">#&gt;  source      : v</span></span>
+<span id="cb7-15"><a href="#cb7-15" tabindex="-1"></a><span class="co">#&gt;  coord. ref. : lon/lat WGS 84 (EPSG:4326) </span></span>
+<span id="cb7-16"><a href="#cb7-16" tabindex="-1"></a><span class="co">#&gt;  names       :  ID_1   NAME_1  ID_2   NAME_2  AREA       POP</span></span>
+<span id="cb7-17"><a href="#cb7-17" tabindex="-1"></a><span class="co">#&gt;  type        : &lt;num&gt;    &lt;chr&gt; &lt;num&gt;    &lt;chr&gt; &lt;num&gt;     &lt;num&gt;</span></span>
+<span id="cb7-18"><a href="#cb7-18" tabindex="-1"></a><span class="co">#&gt;  values      :     1 Diekirch     1 Clervaux   312 1.808e+04</span></span>
+<span id="cb7-19"><a href="#cb7-19" tabindex="-1"></a><span class="co">#&gt;                    1 Diekirch     2 Diekirch   218 3.254e+04</span></span>
+<span id="cb7-20"><a href="#cb7-20" tabindex="-1"></a><span class="co">#&gt;                    1 Diekirch     3  Redange   259 1.866e+04</span></span>
+<span id="cb7-21"><a href="#cb7-21" tabindex="-1"></a><span class="fu">tar_read</span>(v_proj)</span>
+<span id="cb7-22"><a href="#cb7-22" tabindex="-1"></a><span class="co">#&gt;  class       : SpatVector </span></span>
+<span id="cb7-23"><a href="#cb7-23" tabindex="-1"></a><span class="co">#&gt;  geometry    : polygons </span></span>
+<span id="cb7-24"><a href="#cb7-24" tabindex="-1"></a><span class="co">#&gt;  dimensions  : 12, 6  (geometries, attributes)</span></span>
+<span id="cb7-25"><a href="#cb7-25" tabindex="-1"></a><span class="co">#&gt;  extent      : -69990.51, -13879.85, 5484907, 5566555  (xmin, xmax, ymin, ymax)</span></span>
+<span id="cb7-26"><a href="#cb7-26" tabindex="-1"></a><span class="co">#&gt;  source      : v_proj</span></span>
+<span id="cb7-27"><a href="#cb7-27" tabindex="-1"></a><span class="co">#&gt;  coord. ref. : ETRS89 / Kp2000 Jutland (EPSG:2196) </span></span>
+<span id="cb7-28"><a href="#cb7-28" tabindex="-1"></a><span class="co">#&gt;  names       :  ID_1   NAME_1  ID_2   NAME_2  AREA       POP</span></span>
+<span id="cb7-29"><a href="#cb7-29" tabindex="-1"></a><span class="co">#&gt;  type        : &lt;num&gt;    &lt;chr&gt; &lt;num&gt;    &lt;chr&gt; &lt;num&gt;     &lt;num&gt;</span></span>
+<span id="cb7-30"><a href="#cb7-30" tabindex="-1"></a><span class="co">#&gt;  values      :     1 Diekirch     1 Clervaux   312 1.808e+04</span></span>
+<span id="cb7-31"><a href="#cb7-31" tabindex="-1"></a><span class="co">#&gt;                    1 Diekirch     2 Diekirch   218 3.254e+04</span></span>
+<span id="cb7-32"><a href="#cb7-32" tabindex="-1"></a><span class="co">#&gt;                    1 Diekirch     3  Redange   259 1.866e+04</span></span></code></pre></div>
+</div>
+<div id="tar_terra_sprc-targets-with-terra-raster-collections" class="section level2">
+<h2><code>tar_terra_sprc()</code>: targets with <code>terra</code>
+raster collections</h2>
+<p>Targets that produce a <code>SpatRasterCollection</code> can be
+created with <code>tar_terra_sprc()</code>. The various rasters in the
+collection are saved as subdatasets to adhere to <code>targets</code>
+one file per target rule.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>targets<span class="sc">::</span><span class="fu">tar_script</span>({</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>  <span class="co"># contents of _targets.R:</span></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>  <span class="fu">library</span>(targets)</span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>  <span class="fu">library</span>(geotargets)</span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>  elev_scale <span class="ot">&lt;-</span> <span class="cf">function</span>(raster, <span class="at">z =</span> <span class="dv">1</span>, <span class="at">projection =</span> <span class="st">&quot;EPSG:4326&quot;</span>) {</span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>    terra<span class="sc">::</span><span class="fu">project</span>(</span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a>      raster <span class="sc">*</span> z,</span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a>      projection</span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a>    )</span>
+<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a>  }</span>
+<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a>  <span class="fu">tar_option_set</span>(<span class="at">packages =</span> <span class="st">&quot;terra&quot;</span>)</span>
+<span id="cb8-12"><a href="#cb8-12" tabindex="-1"></a>  <span class="fu">geotargets_option_set</span>(<span class="at">gdal_raster_driver =</span> <span class="st">&quot;GTiff&quot;</span>)</span>
+<span id="cb8-13"><a href="#cb8-13" tabindex="-1"></a>  <span class="fu">list</span>(</span>
+<span id="cb8-14"><a href="#cb8-14" tabindex="-1"></a>    <span class="fu">tar_target</span>(</span>
+<span id="cb8-15"><a href="#cb8-15" tabindex="-1"></a>      elev_file,</span>
+<span id="cb8-16"><a href="#cb8-16" tabindex="-1"></a>      <span class="fu">system.file</span>(<span class="st">&quot;ex&quot;</span>, <span class="st">&quot;elev.tif&quot;</span>, <span class="at">package =</span> <span class="st">&quot;terra&quot;</span>),</span>
+<span id="cb8-17"><a href="#cb8-17" tabindex="-1"></a>      <span class="at">format =</span> <span class="st">&quot;file&quot;</span></span>
+<span id="cb8-18"><a href="#cb8-18" tabindex="-1"></a>    ),</span>
+<span id="cb8-19"><a href="#cb8-19" tabindex="-1"></a>    <span class="fu">tar_terra_rast</span>(</span>
+<span id="cb8-20"><a href="#cb8-20" tabindex="-1"></a>      r,</span>
+<span id="cb8-21"><a href="#cb8-21" tabindex="-1"></a>      <span class="fu">rast</span>(elev_file)</span>
+<span id="cb8-22"><a href="#cb8-22" tabindex="-1"></a>    ),</span>
+<span id="cb8-23"><a href="#cb8-23" tabindex="-1"></a>    <span class="fu">tar_terra_sprc</span>(</span>
+<span id="cb8-24"><a href="#cb8-24" tabindex="-1"></a>      raster_elevs,</span>
+<span id="cb8-25"><a href="#cb8-25" tabindex="-1"></a>      <span class="co"># two rasters, one unaltered, one scaled by factor of 2 and</span></span>
+<span id="cb8-26"><a href="#cb8-26" tabindex="-1"></a>      <span class="co"># reprojected to interrupted good homolosine</span></span>
+<span id="cb8-27"><a href="#cb8-27" tabindex="-1"></a>      terra<span class="sc">::</span><span class="fu">sprc</span>(<span class="fu">list</span>(</span>
+<span id="cb8-28"><a href="#cb8-28" tabindex="-1"></a>        <span class="fu">elev_scale</span>(r, <span class="dv">1</span>),</span>
+<span id="cb8-29"><a href="#cb8-29" tabindex="-1"></a>        <span class="fu">elev_scale</span>(r, <span class="dv">2</span>, <span class="st">&quot;+proj=igh&quot;</span>)</span>
+<span id="cb8-30"><a href="#cb8-30" tabindex="-1"></a>      ))</span>
+<span id="cb8-31"><a href="#cb8-31" tabindex="-1"></a>    )</span>
+<span id="cb8-32"><a href="#cb8-32" tabindex="-1"></a>  )</span>
+<span id="cb8-33"><a href="#cb8-33" tabindex="-1"></a>})</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">tar_make</span>()</span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="co">#&gt; + elev_file dispatched</span></span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a><span class="co">#&gt; terra 1.8.42</span></span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a><span class="co">#&gt; ✔ elev_file completed [6ms, 7.99 kB]</span></span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a><span class="co">#&gt; + r dispatched</span></span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a><span class="co">#&gt; ✔ r completed [8ms, 8.52 kB]</span></span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a><span class="co">#&gt; + raster_elevs dispatched</span></span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a><span class="co">#&gt; ✔ raster_elevs completed [14ms, 37.90 kB]</span></span>
+<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a><span class="co">#&gt; ✔ ended pipeline [141ms, 3 completed, 0 skipped]</span></span>
+<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a><span class="fu">tar_read</span>(raster_elevs)</span>
+<span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a><span class="co">#&gt; class       : SpatRasterCollection </span></span>
+<span id="cb9-12"><a href="#cb9-12" tabindex="-1"></a><span class="co">#&gt; length      : 2 </span></span>
+<span id="cb9-13"><a href="#cb9-13" tabindex="-1"></a><span class="co">#&gt; nrow        : 90, 115 </span></span>
+<span id="cb9-14"><a href="#cb9-14" tabindex="-1"></a><span class="co">#&gt; ncol        : 95, 114 </span></span>
+<span id="cb9-15"><a href="#cb9-15" tabindex="-1"></a><span class="co">#&gt; nlyr        :  1,   1 </span></span>
+<span id="cb9-16"><a href="#cb9-16" tabindex="-1"></a><span class="co">#&gt; extent      : 5.741667, 1558890, 49.44167, 5556741  (xmin, xmax, ymin, ymax)</span></span>
+<span id="cb9-17"><a href="#cb9-17" tabindex="-1"></a><span class="co">#&gt; crs (first) : lon/lat WGS 84 (EPSG:4326) </span></span>
+<span id="cb9-18"><a href="#cb9-18" tabindex="-1"></a><span class="co">#&gt; names       : raster_elevs, raster_elevs</span></span></code></pre></div>
+</div>
+<div id="tar_terra_sds-targets-with-terra-raster-datasets" class="section level2">
+<h2><code>tar_terra_sds()</code>: targets with <code>terra</code> raster
+datasets</h2>
+<p>A <code>terra</code> <code>SpatRasterDataset</code> is very similar
+to a <code>SpatRasterCollection</code> except that all sub-datasets must
+have the same projection and extent</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>targets<span class="sc">::</span><span class="fu">tar_script</span>({</span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>  <span class="co"># contents of _targets.R:</span></span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>  <span class="fu">library</span>(targets)</span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a>  <span class="fu">library</span>(geotargets)</span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a>  <span class="fu">tar_option_set</span>(<span class="at">packages =</span> <span class="st">&quot;terra&quot;</span>)</span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a>  <span class="fu">list</span>(</span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a>    <span class="fu">tar_target</span>(</span>
+<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a>      logo_file,</span>
+<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a>      <span class="fu">system.file</span>(<span class="st">&quot;ex/logo.tif&quot;</span>, <span class="at">package =</span> <span class="st">&quot;terra&quot;</span>),</span>
+<span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a>      <span class="at">format =</span> <span class="st">&quot;file&quot;</span></span>
+<span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a>    ),</span>
+<span id="cb10-12"><a href="#cb10-12" tabindex="-1"></a>    <span class="fu">tar_terra_sds</span>(</span>
+<span id="cb10-13"><a href="#cb10-13" tabindex="-1"></a>      raster_dataset,</span>
+<span id="cb10-14"><a href="#cb10-14" tabindex="-1"></a>      {</span>
+<span id="cb10-15"><a href="#cb10-15" tabindex="-1"></a>        x <span class="ot">&lt;-</span> <span class="fu">sds</span>(<span class="fu">rast</span>(logo_file), <span class="fu">rast</span>(logo_file) <span class="sc">/</span> <span class="dv">2</span>)</span>
+<span id="cb10-16"><a href="#cb10-16" tabindex="-1"></a>        <span class="fu">names</span>(x) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;first&quot;</span>, <span class="st">&quot;second&quot;</span>)</span>
+<span id="cb10-17"><a href="#cb10-17" tabindex="-1"></a>        x</span>
+<span id="cb10-18"><a href="#cb10-18" tabindex="-1"></a>      }</span>
+<span id="cb10-19"><a href="#cb10-19" tabindex="-1"></a>    )</span>
+<span id="cb10-20"><a href="#cb10-20" tabindex="-1"></a>  )</span>
+<span id="cb10-21"><a href="#cb10-21" tabindex="-1"></a>})</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">tar_make</span>()</span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a><span class="co">#&gt; + logo_file dispatched</span></span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a><span class="co">#&gt; terra 1.8.42</span></span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a><span class="co">#&gt; ✔ logo_file completed [5ms, 22.46 kB]</span></span>
+<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a><span class="co">#&gt; + raster_dataset dispatched</span></span>
+<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a><span class="co">#&gt; ✔ raster_dataset completed [23ms, 54.73 kB]</span></span>
+<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a><span class="co">#&gt; ✔ ended pipeline [95ms, 2 completed, 0 skipped]</span></span>
+<span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a><span class="fu">tar_read</span>(raster_dataset)</span>
+<span id="cb11-9"><a href="#cb11-9" tabindex="-1"></a><span class="co">#&gt; class       : SpatRasterDataset </span></span>
+<span id="cb11-10"><a href="#cb11-10" tabindex="-1"></a><span class="co">#&gt; subdatasets : 2 </span></span>
+<span id="cb11-11"><a href="#cb11-11" tabindex="-1"></a><span class="co">#&gt; dimensions  : 77, 101 (nrow, ncol)</span></span>
+<span id="cb11-12"><a href="#cb11-12" tabindex="-1"></a><span class="co">#&gt; nlyr        : 3, 3 </span></span>
+<span id="cb11-13"><a href="#cb11-13" tabindex="-1"></a><span class="co">#&gt; resolution  : 1, 1  (x, y)</span></span>
+<span id="cb11-14"><a href="#cb11-14" tabindex="-1"></a><span class="co">#&gt; extent      : 0, 101, 0, 77  (xmin, xmax, ymin, ymax)</span></span>
+<span id="cb11-15"><a href="#cb11-15" tabindex="-1"></a><span class="co">#&gt; coord. ref. : Cartesian (Meter) </span></span>
+<span id="cb11-16"><a href="#cb11-16" tabindex="-1"></a><span class="co">#&gt; source(s)   : raster_dataset </span></span>
+<span id="cb11-17"><a href="#cb11-17" tabindex="-1"></a><span class="co">#&gt; names       : raster_dataset, raster_dataset</span></span></code></pre></div>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
