@@ -427,10 +427,10 @@ with the <code>filetype</code> argument to
 <span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="co">#&gt; terra 1.8.42</span></span>
 <span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co">#&gt; ✔ tif_file completed [5ms, 7.99 kB]</span></span>
 <span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="co">#&gt; + r dispatched</span></span>
-<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="co">#&gt; ✔ r completed [22ms, 10.47 kB]</span></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="co">#&gt; ✔ r completed [1ms, 10.47 kB]</span></span>
 <span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co">#&gt; + r_agg dispatched</span></span>
-<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="co">#&gt; ✔ r_agg completed [2ms, 6.30 kB]</span></span>
-<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="co">#&gt; ✔ ended pipeline [140ms, 3 completed, 0 skipped]</span></span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="co">#&gt; ✔ r_agg completed [1ms, 6.30 kB]</span></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="co">#&gt; ✔ ended pipeline [100ms, 3 completed, 0 skipped]</span></span>
 <span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="fu">tar_read</span>(r)</span>
 <span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="co">#&gt; class       : SpatRaster </span></span>
 <span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="co">#&gt; dimensions  : 90, 95, 1  (nrow, ncol, nlyr)</span></span>
@@ -496,8 +496,8 @@ default <code>preserve_metadata = &quot;drop&quot;</code>.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">tar_make</span>()</span>
 <span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="co">#&gt; + r dispatched</span></span>
 <span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="co">#&gt; terra 1.8.42</span></span>
-<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="co">#&gt; ✔ r completed [8ms, 10.26 kB]</span></span>
-<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a><span class="co">#&gt; ✔ ended pipeline [114ms, 1 completed, 1 skipped]</span></span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="co">#&gt; ✔ r completed [2ms, 10.26 kB]</span></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a><span class="co">#&gt; ✔ ended pipeline [83ms, 1 completed, 1 skipped]</span></span>
 <span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>terra<span class="sc">::</span><span class="fu">units</span>(<span class="fu">tar_read</span>(r))</span>
 <span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a><span class="co">#&gt; [1] &quot;m&quot;</span></span></code></pre></div>
 </div>
@@ -535,10 +535,10 @@ specific options with <code>geotargets_option_set()</code> or with the
 <span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="co">#&gt; + vect_file dispatched</span></span>
 <span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="co">#&gt; ✔ vect_file completed [0ms, 64.69 kB]</span></span>
 <span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a><span class="co">#&gt; + v dispatched</span></span>
-<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a><span class="co">#&gt; ✔ v completed [17ms, 117.63 kB]</span></span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a><span class="co">#&gt; ✔ v completed [8ms, 117.63 kB]</span></span>
 <span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a><span class="co">#&gt; + v_proj dispatched</span></span>
-<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a><span class="co">#&gt; ✔ v_proj completed [24ms, 213.55 kB]</span></span>
-<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a><span class="co">#&gt; ✔ ended pipeline [156ms, 3 completed, 0 skipped]</span></span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a><span class="co">#&gt; ✔ v_proj completed [20ms, 213.55 kB]</span></span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a><span class="co">#&gt; ✔ ended pipeline [128ms, 3 completed, 0 skipped]</span></span>
 <span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a><span class="fu">tar_read</span>(v)</span>
 <span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a><span class="co">#&gt;  class       : SpatVector </span></span>
 <span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a><span class="co">#&gt;  geometry    : polygons </span></span>
@@ -607,12 +607,12 @@ one file per target rule.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">tar_make</span>()</span>
 <span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="co">#&gt; + elev_file dispatched</span></span>
 <span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a><span class="co">#&gt; terra 1.8.42</span></span>
-<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a><span class="co">#&gt; ✔ elev_file completed [6ms, 7.99 kB]</span></span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a><span class="co">#&gt; ✔ elev_file completed [5ms, 7.99 kB]</span></span>
 <span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a><span class="co">#&gt; + r dispatched</span></span>
-<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a><span class="co">#&gt; ✔ r completed [8ms, 8.52 kB]</span></span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a><span class="co">#&gt; ✔ r completed [2ms, 8.52 kB]</span></span>
 <span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a><span class="co">#&gt; + raster_elevs dispatched</span></span>
 <span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a><span class="co">#&gt; ✔ raster_elevs completed [14ms, 37.90 kB]</span></span>
-<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a><span class="co">#&gt; ✔ ended pipeline [141ms, 3 completed, 0 skipped]</span></span>
+<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a><span class="co">#&gt; ✔ ended pipeline [136ms, 3 completed, 0 skipped]</span></span>
 <span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a><span class="fu">tar_read</span>(raster_elevs)</span>
 <span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a><span class="co">#&gt; class       : SpatRasterCollection </span></span>
 <span id="cb9-12"><a href="#cb9-12" tabindex="-1"></a><span class="co">#&gt; length      : 2 </span></span>
@@ -655,8 +655,8 @@ have the same projection and extent</p>
 <span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a><span class="co">#&gt; terra 1.8.42</span></span>
 <span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a><span class="co">#&gt; ✔ logo_file completed [5ms, 22.46 kB]</span></span>
 <span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a><span class="co">#&gt; + raster_dataset dispatched</span></span>
-<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a><span class="co">#&gt; ✔ raster_dataset completed [23ms, 54.73 kB]</span></span>
-<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a><span class="co">#&gt; ✔ ended pipeline [95ms, 2 completed, 0 skipped]</span></span>
+<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a><span class="co">#&gt; ✔ raster_dataset completed [18ms, 54.73 kB]</span></span>
+<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a><span class="co">#&gt; ✔ ended pipeline [89ms, 2 completed, 0 skipped]</span></span>
 <span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a><span class="fu">tar_read</span>(raster_dataset)</span>
 <span id="cb11-9"><a href="#cb11-9" tabindex="-1"></a><span class="co">#&gt; class       : SpatRasterDataset </span></span>
 <span id="cb11-10"><a href="#cb11-10" tabindex="-1"></a><span class="co">#&gt; subdatasets : 2 </span></span>

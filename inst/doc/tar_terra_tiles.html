@@ -601,10 +601,10 @@ layers.</p>
 <span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a><span class="co">#&gt; + raster_file dispatched</span></span>
 <span id="cb17-4"><a href="#cb17-4" tabindex="-1"></a><span class="co">#&gt; ✔ raster_file completed [1ms, 7.99 kB]</span></span>
 <span id="cb17-5"><a href="#cb17-5" tabindex="-1"></a><span class="co">#&gt; + r dispatched</span></span>
-<span id="cb17-6"><a href="#cb17-6" tabindex="-1"></a><span class="co">#&gt; ✔ r completed [11ms, 822.78 kB]</span></span>
+<span id="cb17-6"><a href="#cb17-6" tabindex="-1"></a><span class="co">#&gt; ✔ r completed [5ms, 822.78 kB]</span></span>
 <span id="cb17-7"><a href="#cb17-7" tabindex="-1"></a><span class="co">#&gt; + r_big dispatched</span></span>
 <span id="cb17-8"><a href="#cb17-8" tabindex="-1"></a><span class="co">#&gt; ✔ r_big completed [23ms, 4.05 MB]</span></span>
-<span id="cb17-9"><a href="#cb17-9" tabindex="-1"></a><span class="co">#&gt; ✔ ended pipeline [311ms, 3 completed, 0 skipped]</span></span>
+<span id="cb17-9"><a href="#cb17-9" tabindex="-1"></a><span class="co">#&gt; ✔ ended pipeline [320ms, 3 completed, 0 skipped]</span></span>
 <span id="cb17-10"><a href="#cb17-10" tabindex="-1"></a><span class="fu">tar_load</span>(r_big)</span>
 <span id="cb17-11"><a href="#cb17-11" tabindex="-1"></a><span class="fu">tile_blocksize</span>(r_big)</span>
 <span id="cb17-12"><a href="#cb17-12" tabindex="-1"></a><span class="co">#&gt; [[1]]</span></span>
@@ -702,14 +702,14 @@ the tiles we have specified and return them as a list”</li>
 <div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a><span class="fu">tar_make</span>()</span>
 <span id="cb19-2"><a href="#cb19-2" tabindex="-1"></a><span class="co">#&gt; terra 1.8.42</span></span>
 <span id="cb19-3"><a href="#cb19-3" tabindex="-1"></a><span class="co">#&gt; + tiles_exts dispatched</span></span>
-<span id="cb19-4"><a href="#cb19-4" tabindex="-1"></a><span class="co">#&gt; ✔ tiles_exts completed [2ms, 151 B]</span></span>
+<span id="cb19-4"><a href="#cb19-4" tabindex="-1"></a><span class="co">#&gt; ✔ tiles_exts completed [3ms, 151 B]</span></span>
 <span id="cb19-5"><a href="#cb19-5" tabindex="-1"></a><span class="co">#&gt; + tiles declared [4 branches]</span></span>
-<span id="cb19-6"><a href="#cb19-6" tabindex="-1"></a><span class="co">#&gt; ✔ tiles completed [21ms, 2.32 MB]</span></span>
+<span id="cb19-6"><a href="#cb19-6" tabindex="-1"></a><span class="co">#&gt; ✔ tiles completed [28ms, 2.32 MB]</span></span>
 <span id="cb19-7"><a href="#cb19-7" tabindex="-1"></a><span class="co">#&gt; + tiles_mean declared [4 branches]</span></span>
-<span id="cb19-8"><a href="#cb19-8" tabindex="-1"></a><span class="co">#&gt; ✔ tiles_mean completed [3s, 396.44 kB]</span></span>
+<span id="cb19-8"><a href="#cb19-8" tabindex="-1"></a><span class="co">#&gt; ✔ tiles_mean completed [3.6s, 396.44 kB]</span></span>
 <span id="cb19-9"><a href="#cb19-9" tabindex="-1"></a><span class="co">#&gt; + merged_mean dispatched</span></span>
-<span id="cb19-10"><a href="#cb19-10" tabindex="-1"></a><span class="co">#&gt; ✔ merged_mean completed [9ms, 879.91 kB]</span></span>
-<span id="cb19-11"><a href="#cb19-11" tabindex="-1"></a><span class="co">#&gt; ✔ ended pipeline [3.3s, 10 completed, 3 skipped]</span></span></code></pre></div>
+<span id="cb19-10"><a href="#cb19-10" tabindex="-1"></a><span class="co">#&gt; ✔ merged_mean completed [14ms, 879.91 kB]</span></span>
+<span id="cb19-11"><a href="#cb19-11" tabindex="-1"></a><span class="co">#&gt; ✔ ended pipeline [4.1s, 10 completed, 3 skipped]</span></span></code></pre></div>
 <p>We can see from <code>tar_make()</code> output above and the plots
 below that <code>tiles</code> and <code>tiles_mean</code> are both
 patterns with four branches each.</p>
